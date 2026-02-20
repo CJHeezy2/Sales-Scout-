@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Scout — Ditroit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090c;--bg2:#0c1017;--bg3:#11181f;--bg4:#161e27;
+  --border:#1a2330;--border2:#22303f;
+  --text:#b8cad8;--muted:#3d5468;--dim:#1e2d3a;
+  --accent:#00d4a0;--accent2:rgba(0,212,160,.1);--accent3:rgba(0,212,160,.22);
+  --red:#ff3d5a;--red2:rgba(255,61,90,.1);
+  --orange:#ff8533;--orange2:rgba(255,133,51,.1);
+  --blue:#4da3ff;--blue2:rgba(77,163,255,.1);
+  --yellow:#ffc844;--yellow2:rgba(255,200,68,.1);
+  --purple:#a87eff;--purple2:rgba(168,126,255,.1);
+  --pink:#ff5fa8;--pink2:rgba(255,95,168,.1);
+  --mono:'IBM Plex Mono',monospace;
+  --serif:'Fraunces',Georgia,serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);display:flex;flex-direction:column;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.04) 3px,rgba(0,0,0,.04) 4px);pointer-events:none;z-index:9999;}
+
+/* HEADER */
+header{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:52px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0;gap:16px;}
+.logo{display:flex;align-items:center;gap:10px;font-size:11px;font-weight:600;letter-spacing:.12em;color:var(--accent);white-space:nowrap;}
+.logo-mark{width:24px;height:24px;border:1.5px solid var(--accent);display:flex;align-items:center;justify-content:center;font-size:10px;position:relative;}
+.logo-mark::after{content:'';position:absolute;inset:3px;border:1px solid var(--accent3);}
+.header-mid{flex:1;display:flex;align-items:center;justify-content:center;gap:24px;}
+.hstat{display:flex;align-items:center;gap:8px;font-size:10px;color:var(--muted);letter-spacing:.06em;}
+.hstat-val{font-size:15px;font-weight:600;color:var(--text);}
+.hstat-val.g{color:var(--accent);}
+.hstat-val.r{color:var(--red);}
+.hsep{width:1px;height:24px;background:var(--border);}
+.header-right{display:flex;align-items:center;gap:14px;font-size:10px;color:var(--muted);}
+.live-dot{display:flex;align-items:center;gap:5px;color:var(--accent);}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--accent);animation:blink 2s ease-in-out infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:260px 1fr 300px;flex:1;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.panel{padding:14px 16px;border-bottom:1px solid var(--border);}
+.plabel{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;}
+.plabel em{color:var(--muted);font-style:normal;font-size:9px;text-transform:none;letter-spacing:.04em;}
+
+.mfilters{display:flex;flex-direction:column;gap:3px;}
+.mfbtn{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:transparent;border:1px solid transparent;color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:.06em;cursor:pointer;text-align:left;transition:all .15s;width:100%;}
+.mfbtn:hover{color:var(--text);background:var(--bg3);border-color:var(--border2);}
+.mfbtn.on{color:var(--accent);background:var(--accent2);border-color:var(--accent);}
+.pill{font-size:9px;padding:1px 6px;background:var(--border2);color:var(--muted);}
+.mfbtn.on .pill{background:var(--accent);color:var(--bg);}
+
+.tfilters{display:flex;flex-wrap:wrap;gap:4px;}
+.tfbtn{padding:4px 9px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--muted);transition:all .15s;}
+.tfbtn:hover{color:var(--text);}
+.tfbtn.on-all{color:var(--accent);border-color:var(--accent);background:var(--accent2);}
+.tfbtn.on-news{color:var(--blue);border-color:var(--blue);background:var(--blue2);}
+.tfbtn.on-awards{color:var(--purple);border-color:var(--purple);background:var(--purple2);}
+.tfbtn.on-pitch{color:var(--pink);border-color:var(--pink);background:var(--pink2);}
+.tfbtn.on-hiring{color:var(--yellow);border-color:var(--yellow);background:var(--yellow2);}
+.tfbtn.on-manual{color:var(--accent);border-color:var(--accent);background:var(--accent2);}
+
+.plist{flex:1;overflow-y:auto;padding:6px;}
+.plist::-webkit-scrollbar{width:3px;}
+.plist::-webkit-scrollbar-thumb{background:var(--border2);}
+.pitem{display:flex;align-items:center;gap:8px;padding:7px 8px;cursor:pointer;border:1px solid transparent;transition:all .15s;}
+.pitem:hover{background:var(--bg3);border-color:var(--border);}
+.pitem.on{background:var(--accent2);border-color:var(--accent);}
+.pavatar{width:26px;height:26px;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--muted);flex-shrink:0;font-weight:600;}
+.pinfo{flex:1;min-width:0;}
+.pname{font-size:11px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.prole{font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ptier{font-size:8px;padding:1px 5px;letter-spacing:.08em;flex-shrink:0;}
+.ptier.hot{background:var(--red2);color:var(--red);border:1px solid var(--red);}
+.ptier.warm{background:var(--orange2);color:var(--orange);border:1px solid var(--orange);}
+.ptier.cold{background:var(--blue2);color:var(--blue);border:1px solid var(--blue);}
+
+.add-form{display:flex;flex-direction:column;gap:5px;}
+.inp{background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:7px 10px;font-family:var(--mono);font-size:10px;outline:none;width:100%;transition:border-color .15s;}
+.inp:focus{border-color:var(--accent);}
+.inp::placeholder{color:var(--dim);}
+select.inp option{background:var(--bg3);}
+.btn-add{padding:8px;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;background:var(--accent);color:var(--bg);border:none;font-weight:600;transition:background .15s;width:100%;}
+.btn-add:hover{background:#00ffbf;}
+
+/* MAIN */
+.main{display:flex;flex-direction:column;overflow:hidden;}
+.toolbar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0;}
+.tlabel{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.spacer{flex:1;}
+.refresh-btn{display:flex;align-items:center;gap:6px;padding:6px 14px;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--muted);transition:all .15s;}
+.refresh-btn:hover{color:var(--accent);border-color:var(--accent);background:var(--accent2);}
+.spin{display:inline-block;}
+.spinning{animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.rss-bar{display:flex;align-items:center;gap:12px;padding:5px 16px;border-bottom:1px solid var(--border);background:var(--bg3);font-size:9px;color:var(--muted);flex-shrink:0;flex-wrap:wrap;}
+.rbi{display:flex;align-items:center;gap:5px;}
+.rbd{width:5px;height:5px;border-radius:50%;}
+.rbd.ok{background:var(--accent);}
+.rbd.err{background:var(--red);}
+.rbd.load{background:var(--yellow);animation:blink 1s infinite;}
+
+.loading-bar{height:2px;background:var(--border);overflow:hidden;flex-shrink:0;}
+.loading-inner{height:100%;width:0;background:var(--accent);transition:width .3s ease;}
+.loading-inner.active{animation:loadP 1.5s ease-in-out infinite;}
+@keyframes loadP{0%{width:0;margin-left:0}50%{width:40%;margin-left:30%}100%{width:0;margin-left:100%}}
+
+.feed{flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:10px;}
+.feed::-webkit-scrollbar{width:3px;}
+.feed::-webkit-scrollbar-thumb{background:var(--border2);}
+
+/* CARD */
+.card{background:var(--bg2);border:1px solid var(--border);overflow:hidden;animation:fadeUp .25s ease both;transition:border-color .2s;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.card:hover{border-color:var(--border2);}
+.card.urgent{border-left:2px solid var(--red);}
+
+.card-top{display:flex;align-items:flex-start;gap:10px;padding:12px 14px 8px;}
+.cicon{width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;border:1px solid;}
+.cicon.news{border-color:var(--blue);background:var(--blue2);}
+.cicon.awards{border-color:var(--purple);background:var(--purple2);}
+.cicon.pitch{border-color:var(--pink);background:var(--pink2);}
+.cicon.hiring{border-color:var(--yellow);background:var(--yellow2);}
+.cicon.manual{border-color:var(--accent);background:var(--accent2);}
+
+.cmeta{flex:1;min-width:0;}
+.cprospect{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;}
+.crow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.ctag{font-size:8px;padding:2px 6px;letter-spacing:.1em;text-transform:uppercase;}
+.ctag.news{background:var(--blue2);color:var(--blue);}
+.ctag.awards{background:var(--purple2);color:var(--purple);}
+.ctag.pitch{background:var(--pink2);color:var(--pink);}
+.ctag.hiring{background:var(--yellow2);color:var(--yellow);}
+.ctag.manual{background:var(--accent2);color:var(--accent);}
+.csrc{font-size:9px;color:var(--muted);}
+.cage{font-size:9px;color:var(--dim);}
+
+.cscorewrap{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0;}
+.cscore{font-size:20px;font-weight:600;line-height:1;}
+.cscore.sh{color:var(--red);}
+.cscore.sm{color:var(--yellow);}
+.cscore.sl{color:var(--muted);}
+.cscorelbl{font-size:8px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);}
+
+.card-body{padding:0 14px 10px;}
+.cheadline{font-family:var(--serif);font-size:13.5px;font-weight:300;color:var(--text);line-height:1.5;margin-bottom:5px;}
+.cdetail{font-size:10px;color:var(--muted);line-height:1.65;margin-bottom:8px;}
+.cmoment{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:1px solid;}
+.cmoment.recognition{background:var(--accent2);color:var(--accent);border-color:var(--accent);}
+.cmoment.insight{background:var(--blue2);color:var(--blue);border-color:var(--blue);}
+.cmoment.project{background:var(--orange2);color:var(--orange);border-color:var(--orange);}
+.cbreak{font-size:9px;color:var(--muted);margin-top:5px;line-height:1.6;}
+
+.card-footer{display:flex;align-items:center;gap:6px;padding:8px 14px;border-top:1px solid var(--border);background:var(--bg3);}
+.act{padding:5px 12px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1px solid;background:transparent;transition:all .15s;}
+.act.gen{color:var(--accent);border-color:var(--accent);}
+.act.gen:hover{background:var(--accent);color:var(--bg);}
+.act.src{color:var(--muted);border-color:var(--border2);}
+.act.src:hover{color:var(--blue);border-color:var(--blue);background:var(--blue2);}
+.act.done{color:var(--muted);border-color:var(--border2);}
+.act.done:hover{color:var(--accent);border-color:var(--accent);background:var(--accent2);}
+.act.dis{color:var(--muted);border-color:var(--border2);}
+.act.dis:hover{color:var(--red);border-color:var(--red);background:var(--red2);}
+
+/* EMPTY */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 30px;text-align:center;color:var(--muted);}
+.empty-icon{font-size:28px;opacity:.3;margin-bottom:14px;}
+.empty-ttl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px;}
+.empty-sub{font-size:10px;color:var(--dim);line-height:1.7;}
+
+/* RIGHT PANEL */
+.rpanel{border-left:1px solid var(--border);background:var(--bg2);display:flex;flex-direction:column;overflow:hidden;}
+.rp-tabs{display:flex;border-bottom:1px solid var(--border);}
+.rp-tab{flex:1;padding:11px 6px;font-size:9px;letter-spacing:.08em;text-transform:uppercase;text-align:center;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;transition:all .15s;background:none;border-left:none;border-right:none;border-top:none;font-family:var(--mono);}
+.rp-tab:hover{color:var(--text);}
+.rp-tab.on{color:var(--accent);border-bottom-color:var(--accent);}
+.rp-body{flex:1;overflow-y:auto;padding:14px;}
+.rp-body::-webkit-scrollbar{width:3px;}
+.rp-body::-webkit-scrollbar-thumb{background:var(--border2);}
+
+.import-zone{border:1px dashed var(--border2);padding:18px;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg3);margin-bottom:14px;}
+.import-zone:hover,.import-zone.drag{border-color:var(--accent);background:var(--accent2);}
+.iicon{font-size:20px;margin-bottom:6px;opacity:.4;}
+.ittl{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text);margin-bottom:3px;}
+.isub{font-size:9px;color:var(--muted);line-height:1.6;}
+
+.guide-ttl{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;}
+.gstep{display:flex;gap:8px;margin-bottom:8px;font-size:10px;color:var(--muted);line-height:1.55;}
+.gnum{width:16px;height:16px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:8px;color:var(--accent);flex-shrink:0;margin-top:1px;}
+
+.rss-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--border);background:var(--bg3);margin-bottom:4px;}
+.rss-ico{font-size:11px;flex-shrink:0;}
+.rss-inf{flex:1;min-width:0;}
+.rss-name{font-size:10px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rss-url{font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rss-st{font-size:8px;padding:2px 6px;letter-spacing:.08em;flex-shrink:0;}
+.rss-st.live{background:var(--accent2);color:var(--accent);border:1px solid var(--accent);}
+.rss-st.pending{background:var(--yellow2);color:var(--yellow);border:1px solid var(--yellow);}
+.rss-st.paid{background:var(--red2);color:var(--red);border:1px solid var(--red);}
+.rss-st.error{background:var(--red2);color:var(--red);border:1px solid var(--red);}
+
+.alert-row{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;border:1px solid var(--border);background:var(--bg3);margin-bottom:3px;}
+.alert-term{font-size:10px;color:var(--text);}
+.copy-btn{font-size:8px;padding:2px 8px;border:1px solid var(--border2);background:transparent;color:var(--muted);cursor:pointer;font-family:var(--mono);letter-spacing:.06em;transition:all .15s;}
+.copy-btn:hover{color:var(--accent);border-color:var(--accent);}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+.overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border2);width:580px;max-width:95vw;max-height:82vh;display:flex;flex-direction:column;animation:mIn .2s ease;}
+@keyframes mIn{from{opacity:0;transform:scale(.97) translateY(-8px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.mhead{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border);}
+.mttl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);}
+.mx{background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer;line-height:1;padding:0 4px;}
+.mx:hover{color:var(--text);}
+.mbody{padding:18px;overflow-y:auto;flex:1;}
+.mctx{background:var(--bg3);border:1px solid var(--border);padding:10px 12px;margin-bottom:14px;font-size:11px;color:var(--muted);line-height:1.65;font-style:italic;}
+.mlbl{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim);margin-bottom:8px;}
+.opt{background:var(--bg3);border:1px solid var(--border);padding:12px;cursor:pointer;margin-bottom:8px;transition:all .15s;}
+.opt:hover,.opt.on{border-color:var(--accent);background:var(--accent2);}
+.opt-lbl{font-size:9px;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:5px;}
+.opt-txt{font-size:11px;color:var(--text);line-height:1.65;}
+.mfoot{padding:12px 18px;border-top:1px solid var(--border);display:flex;gap:8px;justify-content:flex-end;}
+.btn-ghost{padding:7px 16px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--muted);transition:all .15s;}
+.btn-ghost:hover{color:var(--text);border-color:var(--text);}
+.btn-prim{padding:7px 16px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;cursor:pointer;background:var(--accent);color:var(--bg);border:none;font-weight:600;transition:background .15s;}
+.btn-prim:hover{background:#00ffbf;}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg3);border:1px solid var(--accent);color:var(--accent);padding:10px 16px;font-size:10px;letter-spacing:.06em;z-index:400;transform:translateY(60px);opacity:0;transition:all .3s ease;max-width:300px;}
+.toast.show{transform:translateY(0);opacity:1;}
+
+.infonote{padding:10px 12px;border:1px solid var(--border);background:var(--bg3);font-size:9px;color:var(--muted);line-height:1.7;margin-top:12px;}
+.infonote span{color:var(--text);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">◈</div>
+    SALES SCOUT
+  </div>
+  <div class="header-mid">
+    <div class="hstat"><span class="hstat-val g" id="h-total">0</span>SIGNALS</div>
+    <div class="hsep"></div>
+    <div class="hstat"><span class="hstat-val r" id="h-urgent">0</span>URGENT</div>
+    <div class="hsep"></div>
+    <div class="hstat"><span class="hstat-val" id="h-prospects">0</span>PROSPECTS</div>
+    <div class="hsep"></div>
+    <div class="hstat"><span class="hstat-val" id="h-actioned">0</span>ACTIONED</div>
+  </div>
+  <div class="header-right">
+    <div class="live-dot"><div class="dot"></div>LIVE</div>
+    <div id="clock"></div>
+    <button onclick="clearState()" style="padding:4px 10px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;border:1px solid var(--border2);background:transparent;color:var(--muted);transition:all .15s;" onmouseover="this.style.color='var(--red)';this.style.borderColor='var(--red)'" onmouseout="this.style.color='var(--muted)';this.style.borderColor='var(--border2)'">↺ RESET</button>
+  </div>
+</header>
+
+<div class="loading-bar"><div class="loading-inner" id="loader"></div></div>
+
+<div class="rss-bar" id="rss-bar">
+  <span style="color:var(--dim);letter-spacing:.1em;text-transform:uppercase;font-size:8px;flex-shrink:0">FEEDS:</span>
+  <div class="rbi"><div class="rbd load" id="dot-campaign"></div><span>Campaign</span></div>
+  <div class="rbi"><div class="rbd load" id="dot-drum"></div><span>The Drum</span></div>
+  <div class="rbi"><div class="rbd load" id="dot-lbb"></div><span>LBBonline</span></div>
+  <div class="rbi"><div class="rbd load" id="dot-mw"></div><span>Mktg Week</span></div>
+  <div class="rbi"><div class="rbd load" id="dot-prweek"></div><span>PRWeek</span></div>
+  <div style="flex:1"></div>
+  <span id="last-refresh" style="color:var(--dim);font-size:9px">Not yet refreshed</span>
+</div>
+
+<div class="layout">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar">
+    <div class="panel">
+      <div class="plabel">Moment Type</div>
+      <div class="mfilters">
+        <button class="mfbtn on" onclick="setMoment('all',this)">ALL MOMENTS <span class="pill" id="mc-all">0</span></button>
+        <button class="mfbtn" onclick="setMoment('recognition',this)">◎ RECOGNITION <span class="pill" id="mc-rec">0</span></button>
+        <button class="mfbtn" onclick="setMoment('insight',this)">◈ INSIGHT <span class="pill" id="mc-ins">0</span></button>
+        <button class="mfbtn" onclick="setMoment('project',this)">◆ PROJECT <span class="pill" id="mc-pro">0</span></button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="plabel">Signal Type</div>
+      <div class="tfilters">
+        <button class="tfbtn on-all" onclick="setType('all',this)">ALL</button>
+        <button class="tfbtn" onclick="setType('news',this)">NEWS</button>
+        <button class="tfbtn" onclick="setType('awards',this)">AWARDS</button>
+        <button class="tfbtn" onclick="setType('pitch',this)">PITCH</button>
+        <button class="tfbtn" onclick="setType('hiring',this)">HIRING</button>
+        <button class="tfbtn" onclick="setType('manual',this)">MANUAL</button>
+      </div>
+    </div>
+    <div class="panel" style="padding-bottom:8px;">
+      <div class="plabel">Prospects <em id="pcount-lbl">0 tracked</em></div>
+    </div>
+    <div class="plist" id="plist"></div>
+    <div class="panel">
+      <div class="plabel">Add Prospect</div>
+      <div class="add-form">
+        <input class="inp" id="np-co" placeholder="Company name…">
+        <input class="inp" id="np-ct" placeholder="Contact / role…">
+        <select class="inp" id="np-tier">
+          <option value="hot">HOT — Active pipeline</option>
+          <option value="warm" selected>WARM — Nurturing</option>
+          <option value="cold">COLD — Early stage</option>
+        </select>
+        <input class="inp" id="np-alert" placeholder="Google Alert RSS URL (optional)">
+        <button class="btn-add" onclick="addProspect()">+ ADD TO TRACKING</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="toolbar">
+      <span class="tlabel">Signal Feed</span>
+      <div class="spacer"></div>
+      <button class="refresh-btn" onclick="fetchAllFeeds()">
+        <span class="spin" id="rspin">↻</span> REFRESH FEEDS
+      </button>
+    </div>
+    <div class="feed" id="feed"></div>
+  </main>
+
+  <!-- RIGHT PANEL -->
+  <aside class="rpanel">
+    <div class="rp-tabs">
+      <button class="rp-tab on" onclick="showTab('import',this)">CSV IMPORT</button>
+      <button class="rp-tab" onclick="showTab('feeds',this)">RSS FEEDS</button>
+      <button class="rp-tab" onclick="showTab('alerts',this)">ALERTS</button>
+    </div>
+    <div class="rp-body" id="rp-body"></div>
+  </aside>
+
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="mhead">
+      <span class="mttl">◈ OUTREACH — <span id="m-prospect"></span></span>
+      <button class="mx" onclick="closeModal()">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="mlbl">Signal Context</div>
+      <div class="mctx" id="m-ctx"></div>
+      <div class="mlbl">Choose Your Angle</div>
+      <div id="m-opts"></div>
+    </div>
+    <div class="mfoot">
+      <button class="btn-ghost" onclick="closeModal()">CANCEL</button>
+      <button class="btn-prim" onclick="copyOutreach()">COPY TO CLIPBOARD</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<input type="file" id="csv-input" accept=".csv" onchange="handleCSV(event)" style="display:none">
+
+<script>
+// ── STATE ──
+let signals=[], prospects=[], dismissed=0, actioned=0;
+let typeFilter='all', momentFilter='all', prospectFilter=null;
+let modalSignal=null, selOpt=0, currentTab='import';
+let feedStatus={};
+
+// ── SEED PROSPECTS (Ditroit pipeline) ──
+const SEEDS=[
+  {id:1,company:'G-SHOCK / Casio',contact:'Brand Marketing EMEA',tier:'hot',alert:''},
+  {id:2,company:'McCann Worldgroup',contact:'Executive Producer',tier:'hot',alert:''},
+  {id:3,company:'WPP / Unilever',contact:'Creative Director',tier:'hot',alert:''},
+  {id:4,company:"Penhaligon's",contact:'Head of Digital',tier:'warm',alert:''},
+  {id:5,company:'Nokia',contact:'Brand Team',tier:'warm',alert:''},
+  {id:6,company:'BBC Creative',contact:'Commissioning Producer',tier:'warm',alert:''},
+  {id:7,company:'Spring Studios',contact:'Head of Production',tier:'warm',alert:''},
+];
+
+// ── RSS FEEDS ──
+const RSS_FEEDS=[
+  {id:'campaign',name:'Campaign Magazine',url:'https://www.campaignlive.co.uk/rss',type:'news',dot:'dot-campaign'},
+  {id:'drum',name:'The Drum',url:'https://www.thedrum.com/rss/news',type:'pitch',dot:'dot-drum'},
+  {id:'lbb',name:'LBBonline',url:'https://www.lbbonline.com/rss',type:'awards',dot:'dot-lbb'},
+  {id:'mw',name:'Marketing Week',url:'https://www.marketingweek.com/feed/',type:'news',dot:'dot-mw'},
+  {id:'prweek',name:'PRWeek',url:'https://www.prweek.com/rss/news',type:'news',dot:'dot-prweek'},
+];
+
+const CORS='https://corsproxy.io/?url=';
+
+// ── URGENCY SCORING (real weighted formula) ──
+function calcUrgency(sig){
+  let s=0;
+  // Recency (max 30)
+  const h=(Date.now()-sig.pubDate)/3600000;
+  s+=h<2?30:h<12?25:h<24?18:h<72?10:h<168?4:1;
+  // Signal type (max 25)
+  s+={linkedin:25,pitch:22,awards:18,hiring:15,news:10}[sig.type]||10;
+  // Prospect tier (max 25)
+  const p=prospects.find(x=>x.id===sig.prospectId);
+  if(p) s+={hot:25,warm:15,cold:5}[p.tier]||5;
+  // Moment (max 20)
+  s+={project:20,insight:13,recognition:8}[sig.moment]||8;
+  // Keyword bonus (max 15)
+  const txt=(sig.headline+' '+sig.detail).toLowerCase();
+  const kw=['cgi','motion','animation','production','rebrand','launch','campaign','budget','pitch','shortlist','award','cannes','d&ad','appoints','hires','joins','brief','film','commercial'];
+  s+=Math.min(kw.filter(k=>txt.includes(k)).length*3,15);
+  return Math.min(Math.round(s),99);
+}
+
+function scoreBreakdown(sig){
+  const h=(Date.now()-sig.pubDate)/3600000;
+  const rec=h<2?30:h<12?25:h<24?18:h<72?10:h<168?4:1;
+  const t={linkedin:25,pitch:22,awards:18,hiring:15,news:10}[sig.type]||10;
+  const p=prospects.find(x=>x.id===sig.prospectId);
+  const tier=p?{hot:25,warm:15,cold:5}[p.tier]||5:0;
+  const m={project:20,insight:13,recognition:8}[sig.moment]||8;
+  return `Recency +${rec} / Type +${t} / Tier +${tier} / Moment +${m}`;
+}
+
+function uc(u){return u>=75?'sh':u>=50?'sm':'sl';}
+
+// ── MOMENT & TYPE CLASSIFICATION ──
+function classifyMoment(txt){
+  const t=txt.toLowerCase();
+  if(/launch|campaign|brief|production|shoot|reel|pitch win|shortlist|finalist|award|cannes|d&ad|eurobest|film|advert|commercial|rebrand|brand refresh/.test(t)) return 'project';
+  if(/strategy|reposit|appoints|hires|joins|new (head|director|vp|chief)|funding|invest|acqui|merger|partner|expan/.test(t)) return 'insight';
+  return 'recognition';
+}
+
+function classifyType(feedType,txt){
+  const t=txt.toLowerCase();
+  if(/shortlist|finalist|award|cannes|d&ad|eurobest|clio|one show|creative circle/.test(t)) return 'awards';
+  if(/pitch|roster|review|appointed|wins account|account win/.test(t)) return 'pitch';
+  if(/hiring|recruit|appoints|joins|new role|head of|director of|vp of|cmo|cco|ceo/.test(t)) return 'hiring';
+  return feedType;
+}
+
+// Competitor studios to manually check on LinkedIn (safe, manual process)
+const COMPETITOR_STUDIOS=[
+  'Framestore','Buck','ManvsMachine','Psyop','MPC Creative',
+  'The Mill','Territory Studio','Golden Wolf','Gentleman Scholar',
+];
+
+function generateManualCheckCards(){
+  // Generate one manual check card per HOT prospect, once per week
+  const hotProspects=prospects.filter(p=>p.tier==='hot');
+  const weekKey='week_'+Math.floor(Date.now()/(7*24*3600000));
+  hotProspects.forEach(p=>{
+    const dupKey=p.id+'_manual_'+weekKey;
+    if(signals.some(s=>s.dupKey===dupKey)) return;
+    // Pick 3 random competitor studios to check this week
+    const shuffled=[...COMPETITOR_STUDIOS].sort(()=>Math.random()-.5).slice(0,3);
+    const sig={
+      id:Date.now()+Math.random(),
+      dupKey,
+      prospectId:p.id,
+      prospect:p.company,
+      type:'manual',
+      moment:'insight',
+      headline:`Weekly check: Is ${p.company} engaging with competitor studios on LinkedIn?`,
+      detail:`Manually review these studios' recent LinkedIn posts for any engagement from ${p.company} contacts: ${shuffled.join(', ')}. Takes ~5 minutes. Look for likes, comments, or shares from decision-makers at ${p.company}.`,
+      source:'Weekly Manual Prompt',
+      link:'https://www.linkedin.com',
+      pubDate:Date.now(),
+      time:'This week',
+      urgency:0,
+    };
+    sig.urgency=calcUrgency(sig);
+    signals.push(sig);
+  });
+}
+
+function matchTerms(company){
+  const parts=company.split('/').map(s=>s.trim()).filter(Boolean);
+  const out=[];
+  parts.forEach(b=>{
+    out.push(b);
+    const w=b.split(' ');
+    if(w.length>1) out.push(w[0]);
+  });
+  return [...new Set(out)].filter(t=>t.length>3);
+}
+
+function fmtAge(ts){
+  const h=(Date.now()-ts)/3600000;
+  if(h<1) return Math.round(h*60)+'min ago';
+  if(h<24) return Math.round(h)+'h ago';
+  return Math.round(h/24)+'d ago';
+}
+
+// ── RSS FETCH ──
+async function fetchFeed(feed){
+  const dot=document.getElementById(feed.dot);
+  if(dot) dot.className='rbd load';
+  try{
+    const ctrl=new AbortController();
+    const tid=setTimeout(()=>ctrl.abort(),10000);
+    const res=await fetch(CORS+encodeURIComponent(feed.url),{signal:ctrl.signal});
+    clearTimeout(tid);
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    const text=await res.text();
+    const xml=new DOMParser().parseFromString(text,'text/xml');
+    const items=[...xml.querySelectorAll('item')];
+    if(dot) dot.className='rbd ok';
+    feedStatus[feed.id]='ok';
+    const out=[];
+    items.slice(0,30).forEach(item=>{
+      const title=item.querySelector('title')?.textContent?.trim()||'';
+      const desc=(item.querySelector('description')?.textContent||'').replace(/<[^>]+>/g,'').trim();
+      const link=item.querySelector('link')?.textContent?.trim()||'';
+      const pd=item.querySelector('pubDate')?.textContent?.trim()||'';
+      const pubDate=pd?new Date(pd).getTime():Date.now();
+      const full=(title+' '+desc).toLowerCase();
+      prospects.forEach(p=>{
+        const terms=matchTerms(p.company);
+        if(!terms.some(t=>full.includes(t.toLowerCase()))) return;
+        const dupKey=p.id+'_'+link;
+        if(signals.some(s=>s.dupKey===dupKey)||out.some(s=>s.dupKey===dupKey)) return;
+        const type=classifyType(feed.type,full);
+        const moment=classifyMoment(full);
+        const sig={
+          id:Date.now()+Math.random(), dupKey,
+          prospectId:p.id, prospect:p.company,
+          type, moment,
+          headline:title,
+          detail:desc.slice(0,220)+(desc.length>220?'…':''),
+          source:feed.name, link, pubDate,
+          time:fmtAge(pubDate), urgency:0,
+        };
+        sig.urgency=calcUrgency(sig);
+        out.push(sig);
+      });
+    });
+    return out;
+  } catch(e){
+    console.warn(feed.name,e.message);
+    if(dot) dot.className='rbd err';
+    feedStatus[feed.id]='err';
+    return [];
+  }
+}
+
+async function fetchAllFeeds(){
+  const spin=document.getElementById('rspin');
+  spin.classList.add('spinning');
+  document.getElementById('loader').className='loading-inner active';
+  const results=await Promise.allSettled(RSS_FEEDS.map(f=>fetchFeed(f)));
+  let added=0;
+  results.forEach(r=>{
+    if(r.status==='fulfilled'&&r.value.length){
+      signals=[...r.value,...signals];
+      added+=r.value.length;
+    }
+  });
+  // Custom Google Alert feeds
+  for(const p of prospects){
+    if(!p.alert) continue;
+    try{
+      const ctrl2=new AbortController();
+      const tid2=setTimeout(()=>ctrl2.abort(),8000);
+      const res=await fetch(CORS+encodeURIComponent(p.alert),{signal:ctrl2.signal});
+      clearTimeout(tid2);
+      const text=await res.text();
+      const xml=new DOMParser().parseFromString(text,'text/xml');
+      const items=[...xml.querySelectorAll('item,entry')];
+      items.slice(0,10).forEach(item=>{
+        const title=item.querySelector('title')?.textContent?.trim()||'';
+        const desc=(item.querySelector('description,summary,content')?.textContent||'').replace(/<[^>]+>/g,'').trim();
+        const link=item.querySelector('link')?.textContent?.trim()||item.querySelector('link')?.getAttribute('href')||'';
+        const pd=item.querySelector('pubDate,published,updated')?.textContent?.trim()||'';
+        const pubDate=pd?new Date(pd).getTime():Date.now();
+        const dupKey=p.id+'_alert_'+link;
+        if(signals.some(s=>s.dupKey===dupKey)) return;
+        const type=classifyType('news',title+' '+desc);
+        const moment=classifyMoment(title+' '+desc);
+        const sig={id:Date.now()+Math.random(),dupKey,prospectId:p.id,prospect:p.company,type,moment,headline:title,detail:desc.slice(0,220)+(desc.length>220?'…':''),source:'Google Alert',link,pubDate,time:fmtAge(pubDate),urgency:0};
+        sig.urgency=calcUrgency(sig);
+        signals.push(sig);
+        added++;
+      });
+    } catch(e){}
+  }
+  signals.sort((a,b)=>b.urgency-a.urgency);
+  generateManualCheckCards();
+  signals.sort((a,b)=>b.urgency-a.urgency);
+  spin.classList.remove('spinning');
+  document.getElementById('loader').className='loading-inner';
+  document.getElementById('last-refresh').textContent='Last refresh: '+new Date().toLocaleTimeString('en-GB');
+  saveState();
+  renderAll();
+  renderRpBody();
+  toast('↻ '+(added>0?added+' new signals loaded':'No new matches — feeds live'));
+}
+
+// ── CSV IMPORT ──
+function handleCSV(e){
+  const file=e.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{parseCSV(ev.target.result);};
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+function parseCSV(text){
+  const lines=text.split('\n').filter(l=>l.trim());
+  if(!lines.length){toast('CSV appears empty');return;}
+  const headers=lines[0].split(',').map(h=>h.replace(/"/g,'').trim().toLowerCase());
+  let imported=0;
+  lines.slice(1).forEach(line=>{
+    const cols=line.match(/(".*?"|[^,]+)(?=\s*,|\s*$)/g)||line.split(',');
+    const row={};
+    headers.forEach((h,i)=>{row[h]=(cols[i]||'').replace(/"/g,'').trim();});
+    const company=row['company name']||row['account name']||row['company']||row['account']||'';
+    const fname=row['first name']||row['name']||'';
+    const lname=row['last name']||'';
+    const title=row['title']||row['job title']||row['role']||'';
+    if(!company) return;
+    if(prospects.some(p=>p.company.toLowerCase()===company.toLowerCase())) return;
+    const contact=[fname,lname].filter(Boolean).join(' ')+(title?' — '+title:'');
+    prospects.push({id:Date.now()+Math.random(),company,contact:contact||'Imported from Sales Navigator',tier:'warm',alert:''});
+    imported++;
+  });
+  saveAndRender();
+  toast('✓ Imported '+imported+' new prospects from Sales Navigator');
+}
+
+// ── PROSPECTS ──
+function addProspect(){
+  const company=document.getElementById('np-co').value.trim();
+  if(!company){toast('Enter a company name');return;}
+  if(prospects.some(p=>p.company.toLowerCase()===company.toLowerCase())){toast('Already tracking this company');return;}
+  prospects.push({
+    id:Date.now(),
+    company,
+    contact:document.getElementById('np-ct').value.trim()||'—',
+    tier:document.getElementById('np-tier').value,
+    alert:document.getElementById('np-alert').value.trim(),
+  });
+  ['np-co','np-ct','np-alert'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('np-tier').value='warm';
+  saveAndRender();
+  toast('✓ '+company+' added to tracking');
+}
+
+// ── RENDER ──
+function renderAll(){
+  renderProspects(); renderFeed(); updateHeader(); updateCounts();
+}
+
+function renderProspects(){
+  document.getElementById('pcount-lbl').textContent=prospects.length+' tracked';
+  const list=document.getElementById('plist');
+  let html=`<div class="pitem ${prospectFilter===null?'on':''}" onclick="setProspect(null)">
+    <div class="pavatar">ALL</div>
+    <div class="pinfo"><div class="pname">All Prospects</div><div class="prole">${signals.length} signals</div></div>
+  </div>`;
+  prospects.forEach(p=>{
+    const sc=signals.filter(s=>s.prospectId===p.id).length;
+    const init=p.company.split(/[\s\/]/)[0].substring(0,2).toUpperCase();
+    html+=`<div class="pitem ${prospectFilter===p.id?'on':''}" onclick="setProspect(${p.id})">
+      <div class="pavatar">${init}</div>
+      <div class="pinfo"><div class="pname">${p.company}</div><div class="prole">${p.contact}</div></div>
+      <span class="ptier ${p.tier}">${p.tier.toUpperCase()}</span>
+    </div>`;
+  });
+  list.innerHTML=html;
+}
+
+function renderFeed(){
+  const feed=document.getElementById('feed');
+  let filtered=signals.filter(s=>{
+    if(typeFilter!=='all'&&s.type!==typeFilter) return false;
+    if(momentFilter!=='all'&&s.moment!==momentFilter) return false;
+    if(prospectFilter!==null&&s.prospectId!==prospectFilter) return false;
+    return true;
+  });
+  if(!filtered.length){
+    feed.innerHTML=`<div class="empty">
+      <div class="empty-icon">◈</div>
+      <div class="empty-ttl">${prospects.length?'No Signals Found':'No Prospects Tracked'}</div>
+      <div class="empty-sub">${prospects.length
+        ?'Adjust filters or hit <strong>Refresh Feeds</strong><br>to fetch live signals from industry publications.'
+        :'Add prospects in the left panel,<br>then click Refresh Feeds to start monitoring.'
+      }</div>
+    </div>`;
+    return;
+  }
+  const ticons={news:'⬡',awards:'★',pitch:'◉',hiring:'◈',manual:'◎'};
+  const mlabels={recognition:'◎ RECOGNITION',insight:'◈ INSIGHT',project:'◆ PROJECT'};
+  feed.innerHTML=filtered.map((s,i)=>`
+    <div class="card ${s.urgency>=75?'urgent':''}" style="animation-delay:${Math.min(i*.04,.5)}s">
+      <div class="card-top">
+        <div class="cicon ${s.type}">${ticons[s.type]||'◈'}</div>
+        <div class="cmeta">
+          <div class="cprospect">${s.prospect}</div>
+          <div class="crow">
+            <span class="ctag ${s.type}">${s.type.toUpperCase()}</span>
+            <span class="csrc">${s.source}</span>
+            <span class="cage">${s.time}</span>
+          </div>
+        </div>
+        <div class="cscorewrap">
+          <div class="cscore ${uc(s.urgency)}">${s.urgency}</div>
+          <div class="cscorelbl">URGENCY</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="cheadline">${s.headline}</div>
+        <div class="cdetail">${s.detail}</div>
+        <span class="cmoment ${s.moment}">${mlabels[s.moment]}</span>
+        <div class="cbreak">${scoreBreakdown(s)}</div>
+      </div>
+      <div class="card-footer">
+        <button class="act gen" onclick="openModal('${s.id}')">◈ OUTREACH</button>
+        ${s.link?`<button class="act src" onclick="window.open('${s.link}','_blank')">↗ SOURCE</button>`:''}
+        <button class="act done" onclick="doAction('${s.id}')">✓ ACTIONED</button>
+        <div style="flex:1"></div>
+        <button class="act dis" onclick="dodismiss('${s.id}')">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function updateHeader(){
+  document.getElementById('h-total').textContent=signals.length;
+  document.getElementById('h-urgent').textContent=signals.filter(s=>s.urgency>=75).length;
+  document.getElementById('h-prospects').textContent=prospects.length;
+  document.getElementById('h-actioned').textContent=actioned;
+}
+
+function updateCounts(){
+  const vis=signals.filter(s=>prospectFilter===null||s.prospectId===prospectFilter);
+  document.getElementById('mc-all').textContent=vis.length;
+  document.getElementById('mc-rec').textContent=vis.filter(s=>s.moment==='recognition').length;
+  document.getElementById('mc-ins').textContent=vis.filter(s=>s.moment==='insight').length;
+  document.getElementById('mc-pro').textContent=vis.filter(s=>s.moment==='project').length;
+}
+
+// ── RIGHT PANEL ──
+function showTab(tab,el){
+  currentTab=tab;
+  document.querySelectorAll('.rp-tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+  renderRpBody();
+}
+
+function renderRpBody(){
+  const body=document.getElementById('rp-body');
+  if(currentTab==='import') body.innerHTML=tImport();
+  if(currentTab==='feeds') body.innerHTML=tFeeds();
+  if(currentTab==='alerts') body.innerHTML=tAlerts();
+}
+
+function tImport(){
+  return `<div class="import-zone" onclick="document.getElementById('csv-input').click()"
+    ondragover="event.preventDefault();this.classList.add('drag')"
+    ondragleave="this.classList.remove('drag')"
+    ondrop="event.preventDefault();this.classList.remove('drag');dropCSV(event)">
+    <div class="iicon">⬆</div>
+    <div class="ittl">Drop Sales Navigator CSV</div>
+    <div class="isub">or click to browse<br>Exports from Sales Navigator → Saved Leads</div>
+  </div>
+  <div class="guide-ttl">How to export from Sales Navigator</div>
+  <div class="gstep"><div class="gnum">1</div><span>Go to Sales Navigator → Lists → Lead Lists</span></div>
+  <div class="gstep"><div class="gnum">2</div><span>Select your saved leads list</span></div>
+  <div class="gstep"><div class="gnum">3</div><span>Click <strong style="color:var(--text)">Export</strong> (top right) → Download CSV</span></div>
+  <div class="gstep"><div class="gnum">4</div><span>Drop the file above — prospects populate automatically</span></div>
+  <div class="gstep"><div class="gnum">5</div><span>Set tier (Hot/Warm/Cold) per prospect after import</span></div>
+  <div class="infonote">
+    <strong style="color:var(--text)">Expected columns:</strong><br>
+    First Name, Last Name, Title, Company Name, Email, LinkedIn URL<br><br>
+    All columns are auto-detected — no reformatting needed.
+  </div>
+  <div class="infonote" style="margin-top:10px">
+    <strong style="color:var(--accent)">Hosting on GitHub Pages</strong><br><br>
+    <div class="gstep"><div class="gnum">1</div><span>Go to github.com → New repository → name it <strong style="color:var(--text)">sales-scout</strong> → Create</span></div>
+    <div class="gstep"><div class="gnum">2</div><span>Click <strong style="color:var(--text)">Add file → Upload files</strong> → upload this file → rename to <strong style="color:var(--text)">index.html</strong> → Commit</span></div>
+    <div class="gstep"><div class="gnum">3</div><span>Settings → Pages → Source: <strong style="color:var(--text)">Deploy from branch → main → / (root)</strong> → Save</span></div>
+    <div class="gstep"><div class="gnum">4</div><span>Bookmark <strong style="color:var(--text)">https://[username].github.io/sales-scout</strong> — open it there every time</span></div>
+    <div class="gstep"><div class="gnum">5</div><span>All data now persists between sessions via localStorage</span></div>
+  </div>`;
+}
+
+function tFeeds(){
+  const sm={ok:'LIVE',err:'ERROR',undefined:'PENDING'};
+  const sc={ok:'live',err:'error',undefined:'pending'};
+  return `<div style="margin-bottom:12px;">
+    ${RSS_FEEDS.map(f=>`<div class="rss-item">
+      <span class="rss-ico">${f.type==='awards'?'★':f.type==='pitch'?'◉':'⬡'}</span>
+      <div class="rss-inf"><div class="rss-name">${f.name}</div><div class="rss-url">${f.url}</div></div>
+      <span class="rss-st ${sc[feedStatus[f.id]]||'pending'}">${sm[feedStatus[f.id]]||'PENDING'}</span>
+    </div>`).join('')}
+  </div>
+  <div class="guide-ttl">Requires Paid Tools</div>
+  <div class="rss-item">
+    <span class="rss-ico">◈</span>
+    <div class="rss-inf"><div class="rss-name">LinkedIn Job Changes</div><div class="rss-url">Sales Navigator alert emails → manual review</div></div>
+    <span class="rss-st paid">MANUAL</span>
+  </div>
+  <div class="rss-item">
+    <span class="rss-ico">◎</span>
+    <div class="rss-inf"><div class="rss-name">Competitor Engagement</div><div class="rss-url">Weekly manual LinkedIn check (prompted in feed)</div></div>
+    <span class="rss-st live">PROMPTED</span>
+  </div>
+  <div class="infonote">
+    Feeds are fetched via <span>corsproxy.io</span> — a free, open CORS proxy. 
+    Signal matching runs against all tracked prospects. Hit <span>Refresh Feeds</span> to re-fetch.
+  </div>`;
+}
+
+function tAlerts(){
+  const terms=prospects.flatMap(p=>p.company.split('/').map(s=>s.trim())).filter(t=>t.length>3);
+  const unique=[...new Set(terms)];
+  return `<div style="margin-bottom:12px;font-size:10px;color:var(--muted);line-height:1.7">
+    Create Google Alerts for each prospect. Set delivery to <strong style="color:var(--text)">RSS Feed</strong>, 
+    then paste the RSS URL into the prospect's Alert field for real-time coverage.
+  </div>
+  <div class="guide-ttl">Suggested Alert Terms</div>
+  ${unique.slice(0,20).map(t=>`<div class="alert-row">
+    <span class="alert-term">"${t}"</span>
+    <button class="copy-btn" onclick="navigator.clipboard.writeText('"${t}"').then(()=>toast('Copied'))">COPY</button>
+  </div>`).join('')}
+  <div class="infonote" style="margin-top:12px">
+    <div class="guide-ttl" style="margin-bottom:8px">Setting up Google Alerts RSS</div>
+    <div class="gstep"><div class="gnum">1</div><span>Go to alerts.google.com</span></div>
+    <div class="gstep"><div class="gnum">2</div><span>Create alert for each term above</span></div>
+    <div class="gstep"><div class="gnum">3</div><span>Set delivery to <strong style="color:var(--text)">RSS Feed</strong></span></div>
+    <div class="gstep"><div class="gnum">4</div><span>Copy the RSS URL → paste into prospect's Alert RSS field in Sales Scout</span></div>
+  </div>`;
+}
+
+// ── FILTERS ──
+function setType(t,el){
+  typeFilter=t;
+  document.querySelectorAll('.tfbtn').forEach(b=>b.className='tfbtn');
+  el.className='tfbtn on-'+t;
+  renderFeed(); updateCounts();
+}
+
+function setMoment(m,el){
+  momentFilter=m;
+  document.querySelectorAll('.mfbtn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+  renderFeed();
+}
+
+function setProspect(id){
+  prospectFilter=id;
+  renderAll();
+}
+
+// ── ACTIONS ──
+function dodismiss(id){
+  signals=signals.filter(s=>String(s.id)!==String(id));
+  dismissed++;
+  saveAndRender();
+  toast('Signal dismissed');
+}
+
+function doAction(id){
+  signals=signals.filter(s=>String(s.id)!==String(id));
+  actioned++;
+  saveAndRender();
+  toast('✓ Marked as actioned');
+}
+
+function dropCSV(e){
+  const file=e.dataTransfer.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>parseCSV(ev.target.result);
+  reader.readAsText(file);
+}
+
+// ── OUTREACH MODAL ──
+function openModal(id){
+  modalSignal=signals.find(s=>String(s.id)===String(id));
+  if(!modalSignal) return;
+  const s=modalSignal;
+  document.getElementById('m-prospect').textContent=s.prospect;
+  document.getElementById('m-ctx').textContent=s.headline+(s.detail?' — '+s.detail.slice(0,180):'');
+  const opts=buildOpts(s);
+  selOpt=0;
+  document.getElementById('m-opts').innerHTML=opts.map((o,i)=>`
+    <div class="opt ${i===0?'on':''}" onclick="pickOpt(${i})">
+      <div class="opt-lbl">${o.label}</div>
+      <div class="opt-txt">${o.text}</div>
+    </div>`).join('');
+  document.getElementById('overlay').classList.add('open');
+}
+
+function buildOpts(s){
+  const co=s.prospect.split('/')[0].trim();
+  if(s.type==='manual') return [
+    {label:'After Spotting Engagement',text:`Hi [Name], I noticed you engaging with [studio]'s recent work on LinkedIn — great piece. I'm Chris at Ditroit, we're a specialist CGI and motion studio in Milan. Thought it was worth reaching out — we work in exactly that space. Happy to share our reel if useful.`},
+    {label:'Cold — No Engagement Spotted',text:`No engagement spotted this week from ${co} on competitor content. Hold off on outreach — check again next week. Focus on news and award signals for this prospect in the meantime.`},
+  ];
+  if(s.type==='awards') return [
+    {label:'Congratulations Opener',text:`Hi [Name], I saw ${co} made the shortlist for [award] — well deserved. We're Ditroit, a specialist CGI and motion studio. We love working with brands at this level of creative ambition. Would love to share our reel if the timing's right.`},
+    {label:'Shared Creative Interest',text:`Hi [Name], great to see ${co} recognised for [award] — the work stood out. I'm Chris at Ditroit. We make CGI and motion for brands pushing creative boundaries. No agenda, just thought it worth reaching out.`},
+  ];
+  if(s.type==='pitch') return [
+    {label:'New Business Win',text:`Hi [Name], saw the news about ${co} — exciting times. New briefs often bring new production needs, so good timing to connect. We're Ditroit, a specialist CGI studio. Happy to share our work if there's anything motion or CGI-shaped in the mix.`},
+    {label:'Production Partner Angle',text:`Hi [Name], Chris here from Ditroit. Spotted ${co}'s recent win and wanted to reach out — we work with agencies at exactly this kind of scale. Would love to be on your radar for any CGI or motion production. Reel available on request.`},
+  ];
+  if(s.type==='hiring') return [
+    {label:'New Role Congratulations',text:`Hi [Name], I noticed your move to [new role] at ${co} — congratulations. I'm Chris at Ditroit, a specialist CGI and motion studio. New production leaders often review vendor partnerships early on, so wanted to introduce ourselves. Happy to share our reel.`},
+    {label:'Low-Key Introduction',text:`Hi [Name], I saw you've joined ${co} — welcome. We're Ditroit, a Milan-based CGI and motion studio. No pitch, just wanted to get on your radar. We work with brands like [reference] — happy to share the work if useful.`},
+  ];
+  if(s.moment==='project') return [
+    {label:'Timely Project Angle',text:`Hi [Name], I spotted ${co}'s [campaign/launch] — looks like an exciting moment for the brand. We're Ditroit, specialists in CGI and motion for exactly this kind of work. Would love to share our reel if there's anything production-related coming up.`},
+    {label:'Concise Direct Approach',text:`Hi [Name], Chris from Ditroit. Saw ${co}'s [news] — good timing to reach out. We make CGI and motion that I think would resonate with what you're building. Can I send our reel across?`},
+  ];
+  return [
+    {label:'Insight-Led Opener',text:`Hi [Name], I've been following ${co}'s direction with interest. We're Ditroit, a specialist CGI and motion studio in Milan. I think there's a natural fit between what you're building and what we do. Happy to share our latest work if useful.`},
+    {label:'Direct Introduction',text:`Hi [Name], I'm Chris, New Business Lead at Ditroit — a CGI and motion studio based in Milan. I've been keeping an eye on ${co} and thought this was a good moment to connect. Would love to show you what we've been doing.`},
+  ];
+}
+
+function pickOpt(i){
+  selOpt=i;
+  document.querySelectorAll('.opt').forEach((el,idx)=>el.classList.toggle('on',idx===i));
+}
+
+function closeModal(){document.getElementById('overlay').classList.remove('open');}
+
+function copyOutreach(){
+  const opts=document.querySelectorAll('.opt-txt');
+  const text=opts[selOpt]?.textContent||'';
+  navigator.clipboard.writeText(text).then(()=>{closeModal();toast('✓ Outreach copied to clipboard');})
+    .catch(()=>{closeModal();toast('✓ Ready — copy manually');});
+}
+
+// ── CLOCK ──
+function tick(){document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-GB',{hour12:false})+' GMT';}
+
+// ── PERSISTENCE ──
+const STORAGE_KEY='salesscout_v4';
+
+function saveState(){
+  try{
+    const state={
+      prospects,
+      signals,
+      dismissed,
+      actioned,
+      savedAt:Date.now(),
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch(e){
+    console.warn('Save failed:',e.message);
+  }
+}
+
+function loadState(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(!raw) return false;
+    const state=JSON.parse(raw);
+    if(state.prospects && state.prospects.length){
+      prospects=state.prospects;
+      signals=state.signals||[];
+      dismissed=state.dismissed||0;
+      actioned=state.actioned||0;
+      // Recalculate time labels since they're relative
+      signals.forEach(s=>{ s.time=fmtAge(s.pubDate); });
+      return true;
+    }
+    return false;
+  } catch(e){
+    console.warn('Load failed:',e.message);
+    return false;
+  }
+}
+
+function clearState(){
+  if(!confirm('Reset all data? This will clear your prospects, signals, and history.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  prospects=SEEDS.map(p=>({...p}));
+  signals=[];
+  dismissed=0;
+  actioned=0;
+  renderAll();
+  renderRpBody();
+  toast('↺ Data reset to defaults');
+}
+
+// Auto-save whenever state changes — call after every mutation
+function saveAndRender(){
+  saveState();
+  renderAll();
+}
+
+// ── INIT ──
+window.onload=function(){
+  const loaded=loadState();
+  if(!loaded){
+    // First run — seed with Ditroit pipeline
+    prospects=SEEDS.map(p=>({...p}));
+  }
+  renderAll();
+  renderRpBody();
+  tick();
+  setInterval(tick,1000);
+  // Show save status in toast on load
+  if(loaded){
+    const state=JSON.parse(localStorage.getItem(STORAGE_KEY));
+    const ago=fmtAge(state.savedAt);
+    toast('↺ Session restored — last saved '+ago);
+  }
+  setTimeout(fetchAllFeeds,800);
+};
+
+document.getElementById('overlay').addEventListener('click',e=>{
+  if(e.target===document.getElementById('overlay')) closeModal();
+});
+
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),3200);
+}
+</script>
+</body>
+</html>
